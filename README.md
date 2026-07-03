@@ -1,10 +1,11 @@
-# gtr069 — TR-069 Inform ACS + 장치 목록
+🚧 Work in progress — v0.1
+#  k-acs — TR-069 Inform ACS + 장치 목록
 
 CPE(장치)가 보내는 TR-069(CWMP) **Inform** 메시지를 수신·저장하는 **Go ACS** 와, 그 장치를
 목록으로 보여주는 **Next.js** 화면으로 구성된 데모 프로젝트.
 
 ```
-gtr069/
+ k-acs/
 ├── acs/   # Go ACS 백엔드 (Inform 수신 + SQLite 저장 + JSON API)
 └── web/   # Next.js 장치 목록 UI
 ```
