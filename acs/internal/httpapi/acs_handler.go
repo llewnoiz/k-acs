@@ -106,7 +106,7 @@ func parseUpTime(s string) int {
 	if n, err := strconv.Atoi(s); err == nil {
 		return n
 	}
-	panic("unimplemented")
+	return 0
 }
 
 func clientIP(r *http.Request) string {

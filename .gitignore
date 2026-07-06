@@ -27,3 +27,7 @@ acs.db
 
 # --- 로그 ---
 *.log
+
+
+# --- IDE ---
+.vscode
