@@ -70,6 +70,7 @@ export default function DeviceTable() {
               <th className="px-4 py-3">마지막 이벤트</th>
               <th className="px-4 py-3 text-right">Inform 횟수</th>
               <th className="px-4 py-3">마지막 Inform</th>
+              <th className="px-4 py-3">Up Time</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -87,18 +88,19 @@ export default function DeviceTable() {
                 </td>
                 <td className="px-4 py-3 text-right tabular-nums">{d.informCount}</td>
                 <td className="px-4 py-3 text-slate-500">{formatTime(d.lastInformAt)}</td>
+                <td className="px-4 py-3">{d.upTime || '-'}</td>
               </tr>
             ))}
             {devices.length === 0 && !loading && (
               <tr>
-                <td colSpan={8} className="px-4 py-10 text-center text-slate-400">
+                <td colSpan={9} className="px-4 py-10 text-center text-slate-400">
                   아직 Inform 을 보낸 장치가 없습니다.
                 </td>
               </tr>
             )}
             {loading && (
               <tr>
-                <td colSpan={8} className="px-4 py-10 text-center text-slate-400">
+                <td colSpan={9} className="px-4 py-10 text-center text-slate-400">
                   불러오는 중…
                 </td>
               </tr>

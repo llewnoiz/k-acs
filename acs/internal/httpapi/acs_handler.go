@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 
 	"gtr069/acs/internal/cwmp"
@@ -51,6 +52,9 @@ func (s *Server) handleACS(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "invalid Inform", http.StatusInternalServerError)
 		return
 	}
+	log.Printf("inform: serial=%s manufacturer=%s event=%s ip=%s uptime=%s",
+		inform.DeviceID.SerialNumber, inform.DeviceID.Manufacturer,
+		inform.FirstEventCode(), clientIP(r), inform.ParamSuffix("DeviceInfo.UpTime"))
 
 	d := deviceFromInform(inform, clientIP(r))
 	if err := s.Store.UpsertDevice(d); err != nil {
@@ -58,8 +62,6 @@ func (s *Server) handleACS(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "storage error", http.StatusInternalServerError)
 		return
 	}
-	log.Printf("acs: Inform from %s (%s) event=%s ip=%s",
-		d.SerialNumber, d.Manufacturer, d.LastEvent, d.IP)
 
 	w.Header().Set("Content-Type", "text/xml; charset=utf-8")
 	w.Write(cwmp.BuildInformResponse(cwmpID))
@@ -93,7 +95,18 @@ func deviceFromInform(in *cwmp.Inform, ip string) store.Device {
 		LastInformAt:    now,
 		ParamJSON:       string(paramJSON),
 		CreatedAt:       now,
+		UpTime:          parseUpTime(in.ParamSuffix("DeviceInfo.UpTime")),
 	}
+}
+
+func parseUpTime(s string) int {
+	if s == "" {
+		return 0
+	}
+	if n, err := strconv.Atoi(s); err == nil {
+		return n
+	}
+	panic("unimplemented")
 }
 
 func clientIP(r *http.Request) string {

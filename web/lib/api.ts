@@ -14,6 +14,7 @@ export interface Device {
   lastInformAt: string;
   informCount: number;
   createdAt: string;
+  upTime: number | null;
 }
 
 export async function fetchDevices(): Promise<Device[]> {

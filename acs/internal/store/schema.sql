@@ -10,5 +10,6 @@ CREATE TABLE IF NOT EXISTS devices (
     last_inform_at   TEXT NOT NULL DEFAULT '',
     inform_count     INTEGER NOT NULL DEFAULT 0,
     param_json       TEXT NOT NULL DEFAULT '{}',
-    created_at       TEXT NOT NULL DEFAULT ''
+    created_at       TEXT NOT NULL DEFAULT '',
+    up_time          INTEGER NOT NULL DEFAULT 0
 );

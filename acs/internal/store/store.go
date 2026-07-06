@@ -26,6 +26,7 @@ type Device struct {
 	InformCount     int    `json:"informCount"`
 	ParamJSON       string `json:"paramJson,omitempty"`
 	CreatedAt       string `json:"createdAt"`
+	UpTime          int    `json:"upTime"`
 }
 
 // Store wraps the SQLite connection.
@@ -55,8 +56,8 @@ func (s *Store) UpsertDevice(d Device) error {
 INSERT INTO devices (
     serial_number, manufacturer, oui, product_class, ip,
     software_version, hardware_version, last_event, last_inform_at,
-    inform_count, param_json, created_at
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)
+    inform_count, param_json, created_at, up_time
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?)
 ON CONFLICT(serial_number) DO UPDATE SET
     manufacturer     = excluded.manufacturer,
     oui              = excluded.oui,
@@ -67,11 +68,12 @@ ON CONFLICT(serial_number) DO UPDATE SET
     last_event       = excluded.last_event,
     last_inform_at   = excluded.last_inform_at,
     inform_count     = devices.inform_count + 1,
-    param_json       = excluded.param_json;`
+    param_json       = excluded.param_json,
+    up_time          = excluded.up_time;`
 	_, err := s.db.Exec(q,
 		d.SerialNumber, d.Manufacturer, d.OUI, d.ProductClass, d.IP,
 		d.SoftwareVersion, d.HardwareVersion, d.LastEvent, d.LastInformAt,
-		d.ParamJSON, d.CreatedAt,
+		d.ParamJSON, d.CreatedAt, d.UpTime,
 	)
 	if err != nil {
 		return fmt.Errorf("upsert device %q: %w", d.SerialNumber, err)
@@ -81,13 +83,13 @@ ON CONFLICT(serial_number) DO UPDATE SET
 
 const selectCols = `serial_number, manufacturer, oui, product_class, ip,
     software_version, hardware_version, last_event, last_inform_at,
-    inform_count, param_json, created_at`
+    inform_count, param_json, created_at, up_time`
 
 func scanDevice(sc interface{ Scan(...any) error }, d *Device) error {
 	return sc.Scan(
 		&d.SerialNumber, &d.Manufacturer, &d.OUI, &d.ProductClass, &d.IP,
 		&d.SoftwareVersion, &d.HardwareVersion, &d.LastEvent, &d.LastInformAt,
-		&d.InformCount, &d.ParamJSON, &d.CreatedAt,
+		&d.InformCount, &d.ParamJSON, &d.CreatedAt, &d.UpTime,
 	)
 }
 
