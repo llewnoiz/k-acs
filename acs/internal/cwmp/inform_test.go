@@ -41,6 +41,11 @@ func TestParseInform(t *testing.T) {
 	if got := in.ParamSuffix("ManagementServer.ConnectionRequestURL"); !strings.Contains(got, "192.168.0.10") {
 		t.Errorf("ConnectionRequestURL = %q", got)
 	}
+
+	if got := in.ParamSuffix("DeviceInfo.UpTime"); got != "123456" {
+		t.Errorf("UpTime = %q, want 123456", got)
+	}
+
 	if n := len(in.ParameterList); n != 4 {
 		t.Errorf("ParameterList len = %d, want 4", n)
 	}
