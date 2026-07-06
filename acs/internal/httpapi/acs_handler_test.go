@@ -10,6 +10,7 @@ func TestParseUpTime(t *testing.T) {
 		{"", 0},
 		{"123", 123},
 		{"0", 0},
+		{"abc", 0},
 	}
 
 	for _, test := range tests {
